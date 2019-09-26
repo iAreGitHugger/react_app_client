@@ -1,0 +1,27 @@
+language: react
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t iaredockerhugger/react_app  -f Dockerfile.dev .
+
+script:
+  - docker run -e CI=true iaredockerhugger/react_app npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "eu-west-1"
+  app: "react_app"
+  env: "ReactApp-env"
+  bucket_name: "elasticbeanstalk-eu-west-1-874966447508"
+  bucket_path: "react_app"
+  on:
+    branch: master
+  access_key_id:
+    secure: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY"
+
+
